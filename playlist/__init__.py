@@ -8,7 +8,7 @@ csrf = CSRFProtect()
 csrf.init_app(app)
 app.config['SECRET_KEY'] = 'c9f2907c6e760b384f32e59aae8cd529'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://root:root@localhost:3306/db_flask_playlist'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/db_flask_playlist'
 db = SQLAlchemy(app)
 app.app_context().push()
 
