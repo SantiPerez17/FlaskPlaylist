@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     playlists = db.relationship('Playlist', backref='owner', lazy=True)  
     
     def __repr__(self):
-        return f'<User ("{self.id}","{self.username}","{self.email}")>'
+        return 'User ("{self.id}","{self.username}","{self.email}")'
 
 class Genre(enum.Enum):
     ROCK="rock"
@@ -41,9 +41,15 @@ class Song(db.Model):
 
 
     def __repr__(self):
-        return f"<Song('{self.id}','{self.name}', '{self.author}', '{self.genre}')>"
+        return f"Song('{self.id}','{self.name}', '{self.author}', '{self.genre}')"
     
-
+    def serialize(self):
+        return {
+            'id':self.id,
+            'name':self.name,
+            'author':self.author,
+            'genre':str(self.genre.name)
+        }
 
 
 class Playlist(db.Model):
@@ -53,4 +59,5 @@ class Playlist(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     songs = db.relationship('Song', secondary=playlist_song,backref='songs')
 
-
+    def __repr__(self):
+        return f"Playlist('{self.id}','{self.name}','{self.user_id}')"
