@@ -14,6 +14,7 @@ db.session.commit()
 
 p1=Playlist(name='jo',user_id=u1.id, songs=[s1,s2])
 p2=Playlist(name='ja',user_id=u2.id, songs=[s2])
+p2.songs.append(s1)
 db.session.add_all([p1,p2])
 
 db.session.commit()
