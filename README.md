@@ -69,83 +69,6 @@ Aquí se describen los endpoints disponibles en el proyecto:
 
 Por supuesto, aquí tienes la documentación para los endpoints proporcionados:
 
-## Endpoints de Songs
-
-### Agregar una nueva canción
-```
-POST /songs/
-```
-Este endpoint permite agregar una nueva canción. Se requiere autenticación con un token válido.
-
-#### Parámetros de entrada
-- `name`: Nombre de la canción.
-- `author`: Autor de la canción.
-- `genre`: Género de la canción.
-
-#### Respuestas
-- `200 OK`: La canción se ha creado correctamente.
-- `400 Bad Request`: Los datos de la solicitud son inválidos o faltan campos requeridos.
-- `401 Unauthorized`: Se requiere autenticación para acceder al recurso.
-- `500 Internal Server Error`: Se produjo un error al guardar la canción.
-
-### Obtener todas las canciones
-```
-GET /songs/
-```
-Este endpoint devuelve una lista de todas las canciones.
-
-#### Respuesta
-- `200 OK`: La lista de canciones se ha obtenido correctamente.
-- `500 Internal Server Error`: Se produjo un error al obtener las canciones.
-
-### Obtener una canción por ID
-```
-GET /songs/{id}
-```
-Este endpoint permite obtener información de una canción específica según su ID.
-
-#### Parámetros de entrada
-- `id`: ID de la canción.
-
-#### Respuestas
-- `200 OK`: La canción se ha encontrado y se devuelve su información.
-- `404 Not Found`: La canción no se encontró en la base de datos.
-
-### Eliminar una canción
-```
-DELETE /songs/{id}
-```
-Este endpoint permite eliminar una canción según su ID. Se requiere autenticación con un token válido.
-
-#### Parámetros de entrada
-- `id`: ID de la canción a eliminar.
-
-#### Respuestas
-- `200 OK`: La canción se ha eliminado correctamente.
-- `404 Not Found`: La canción no se encontró en la base de datos.
-- `401 Unauthorized`: Se requiere autenticación para acceder al recurso.
-- `500 Internal Server Error`: Se produjo un error al eliminar la canción.
-
-### Actualizar una canción
-```
-PUT /songs/{id}
-```
-Este endpoint permite actualizar la información de una canción según su ID. Se requiere autenticación con un token válido.
-
-#### Parámetros de entrada
-- `id`: ID de la canción a actualizar.
-- `name` (opcional): Nuevo nombre de la canción.
-- `author` (opcional): Nuevo autor de la canción.
-- `genre` (opcional): Nuevo género de la canción.
-
-#### Respuestas
-- `200 OK`: La canción se ha actualizado correctamente.
-- `400 Bad Request`: Los datos de la solicitud son inválidos.
-- `404 Not Found`: La canción no se encontró en la base de datos.
-- `401 Unauthorized`: Se requiere autenticación para acceder al recurso.
-- `500 Internal Server Error`: Se produjo un error al actualizar la canción.
-
-
 ## Endpoints de Users
 
 ### Agregar un nuevo usuario
@@ -251,6 +174,82 @@ Este endpoint permite cambiar la contraseña de un usuario. Se requiere autentic
 - `401 Unauthorized`: Se requiere autenticación para acceder al recurso.
 - `500 Internal Server Error`: Se produjo un error al cambiar la contraseña.
 
+
+## Endpoints de Songs
+
+### Agregar una nueva canción
+```
+POST /songs/
+```
+Este endpoint permite agregar una nueva canción. Se requiere autenticación con un token válido.
+
+#### Parámetros de entrada
+- `name`: Nombre de la canción.
+- `author`: Autor de la canción.
+- `genre`: Género de la canción.
+
+#### Respuestas
+- `200 OK`: La canción se ha creado correctamente.
+- `400 Bad Request`: Los datos de la solicitud son inválidos o faltan campos requeridos.
+- `401 Unauthorized`: Se requiere autenticación para acceder al recurso.
+- `500 Internal Server Error`: Se produjo un error al guardar la canción.
+
+### Obtener todas las canciones
+```
+GET /songs/
+```
+Este endpoint devuelve una lista de todas las canciones.
+
+#### Respuesta
+- `200 OK`: La lista de canciones se ha obtenido correctamente.
+- `500 Internal Server Error`: Se produjo un error al obtener las canciones.
+
+### Obtener una canción por ID
+```
+GET /songs/{id}
+```
+Este endpoint permite obtener información de una canción específica según su ID.
+
+#### Parámetros de entrada
+- `id`: ID de la canción.
+
+#### Respuestas
+- `200 OK`: La canción se ha encontrado y se devuelve su información.
+- `404 Not Found`: La canción no se encontró en la base de datos.
+
+### Eliminar una canción
+```
+DELETE /songs/{id}
+```
+Este endpoint permite eliminar una canción según su ID. Se requiere autenticación con un token válido.
+
+#### Parámetros de entrada
+- `id`: ID de la canción a eliminar.
+
+#### Respuestas
+- `200 OK`: La canción se ha eliminado correctamente.
+- `404 Not Found`: La canción no se encontró en la base de datos.
+- `401 Unauthorized`: Se requiere autenticación para acceder al recurso.
+- `500 Internal Server Error`: Se produjo un error al eliminar la canción.
+
+### Actualizar una canción
+```
+PUT /songs/{id}
+```
+Este endpoint permite actualizar la información de una canción según su ID. Se requiere autenticación con un token válido.
+
+#### Parámetros de entrada
+- `id`: ID de la canción a actualizar.
+- `name` (opcional): Nuevo nombre de la canción.
+- `author` (opcional): Nuevo autor de la canción.
+- `genre` (opcional): Nuevo género de la canción.
+
+#### Respuestas
+- `200 OK`: La canción se ha actualizado correctamente.
+- `400 Bad Request`: Los datos de la solicitud son inválidos.
+- `404 Not Found`: La canción no se encontró en la base de datos.
+- `401 Unauthorized`: Se requiere autenticación para acceder al recurso.
+- `500 Internal Server Error`: Se produjo un error al actualizar la canción.
 
 ## Endpoints de Playlists
 
