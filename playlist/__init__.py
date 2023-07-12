@@ -14,9 +14,9 @@ db = SQLAlchemy(app)
 app.app_context().push()
 
 from .controllers.UserController import url_user
-# from .controllers.PlaylistController import url_playlist
+from .controllers.PlaylistController import url_playlist
 from .controllers.SongController import url_song
 
 app.register_blueprint(url_user, url_prefix="/users")
-# app.register_blueprint(url_playlist, url_prefix="/playlists")
+app.register_blueprint(url_playlist, url_prefix="/playlists")
 app.register_blueprint(url_song,url_prefix="/songs")

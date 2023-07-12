@@ -1,107 +1,105 @@
-from flask import Flask,request,jsonify,make_response,Blueprint
+from flask import Flask, request, jsonify, Blueprint
+from playlist.auth import token_required
 from playlist import app, db
-from playlist.models import *
-from playlist.services import SongService
-#from playlist.services.SongService import *
-import json 
+from playlist.models import Song
+from playlist.services import SongService,UserService
 
+url_song = Blueprint('songs', __name__)
 
-
-url_song = Blueprint('song', __name__)
-
-
-@url_song.route("/",methods=['POST'])
-def addnewSong():
+@url_song.route("/", methods=['POST'])
+@token_required
+def add_new_song(current_user):
     json_data = request.get_json()
-    if not json_data:
+
+    if not json_data or len(json_data) != 3:
         return {'message': 'Invalid Data.'}, 400
-    if len(json_data)!=3:
-        return {'message': 'Invalid Data.'}, 400    
-    # Validations
-    try:
-        name=json_data['name']
-        author=json_data['author']
-        genre=json_data['genre']
-    except Exception as e:
-            return {'message': 'The necessary fields do not exist.'}, 400
-    # Save data
+
+    name = json_data.get('name')
+    author = json_data.get('author')
+    genre = json_data.get('genre')
+
+    if not all([name, author, genre]):
+        return {'message': 'Missing required fields.'}, 400
+
     song = Song(name=name, author=author, genre=genre)
     db.session.add(song)
+
     try:
         db.session.commit()
-    except Exception as e:
+        return {'message': 'Song {} created.'.format(song.name)}, 200
+    except:
         db.session.rollback()
         return {'message': 'Could not save the information.'}, 500
-    return {'message': 'Song '+name+' created.'}, 200
 
-@url_song.route("/",methods=['GET'])
-def listSongs():
-    listSongs={}
-    listSongs=[]
-    for i in Song.query.all():
-        listSongs.append(i.serialize())
-    if listSongs is not None:
-        return listSongs,200
-    else:
-        return jsonify({"error": "Invalid request"}), 400
+@url_song.route("/", methods=['GET'])
+def list_songs():
+    songs = Song.query.all()
+    serialized_songs = [song.serialize() for song in songs]
+    return {'songs': serialized_songs}, 200
 
+@url_song.route("/<id>", methods=['GET'])
+def get_song(id):
+    if not SongService.existById(id):
+        return {'message': 'Song not found.'}, 404
 
-@url_song.route("/<id>",methods=['GET'])
-def getSong(id):
-    if SongService.existById(id):
-        song = Song.query.get(id)
-        #print(song)
-        return Song.serialize(song)
+    song = Song.query.get(id)
+    if song:
+        return song.serialize(), 200
     else:
         return {'message': 'Song not found.'}, 404
 
-@url_song.route("/<id_song>",methods=['DELETE'])
-def deleteSong(id_song):
+@url_song.route("/<id_song>", methods=['DELETE'])
+@token_required
+def delete_song(current_user,id_song):
     song = Song.query.get(id_song)
-    if song:
-        db.session.delete(song)
-        db.session.commit()
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            return {
-                'message': 'Could not delete song.'}, 500
-    else:
-        return {'message': 'Song not found.'}, 400
-    return {'message': 'ok'}, 200
 
-@url_song.route("/<id_song>",methods=['PUT'])
-def updateSong(id_song):
-    json_data = request.get_json()
-    if not json_data:
-        return {'message': 'Invalid Data.'}, 400
-    if len(json_data)!=3:
-        return {'message': 'Invalid Data.'}, 400    
-    # Validations
+    if not song:
+        return {'message': 'Song not found.'}, 404
+
+    if not UserService.existsByEmail(current_user.email):
+        return {'message': 'Unauthorized. Token email does not match user email.'}, 401
+
+
+    db.session.delete(song)
+
     try:
-        name=json_data['name']
-        author=json_data['author']
-        genre=json_data['genre']
-    except Exception as e:
-            return {'message': 'The necessary fields do not exist.'}, 400
-    # Save data
-    if SongService.existById(id):
-        song = Song.query.get(id_song)
-        if name != "None":
-            song.name=name
-        if author != "None":
-            song.author=author
-        if genre != "None":
-            song.genre=genre
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-    else:
+        db.session.commit()
+        return {'message': 'Song deleted successfully.'}, 200
+    except:
+        db.session.rollback()
+        return {'message': 'Could not delete song.'}, 500
+
+@url_song.route("/<id_song>", methods=['PUT'])
+@token_required
+def update_song(current_user,id_song):
+    if not UserService.existsByEmail(current_user.email):
+        return {'message': 'Unauthorized. Token email does not match user email.'}, 401
+
+
+    json_data = request.get_json()
+
+    if not json_data or len(json_data) != 3:
+        return {'message': 'Invalid Data.'}, 400
+
+    name = json_data.get('name')
+    author = json_data.get('author')
+    genre = json_data.get('genre')
+
+    if not any([name, author, genre]):
+        return {'message': 'No fields to update.'}, 400
+
+    song = Song.query.get(id_song)
+
+    if not song:
+        return {'message': 'Song not found.'}, 404
+
+    song.name = name if name else song.name
+    song.author = author if author else song.author
+    song.genre = genre if genre else song.genre
+
+    try:
+        db.session.commit()
+        return {'message': 'Song {} updated.'.format(song.name)}, 200
+    except:
+        db.session.rollback()
         return {'message': 'Could not save the information.'}, 500
-    return {'message': 'Song '+name+' updated.'}, 200
-  
-
-
-

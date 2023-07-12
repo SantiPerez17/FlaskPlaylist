@@ -14,3 +14,9 @@ def existById(id):
 def existsByEmail(email):
      return db.session.query(db.exists().where(User.email == email)).scalar()
 
+def getIDByEmail(email):
+    user=db.session.query(User).filter_by(email=email).first()
+    return user.id
+
+def getByEmail(email):
+     return db.session.query(User).filter_by(email=email).first()
