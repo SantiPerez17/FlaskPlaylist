@@ -21,14 +21,7 @@ class User(UserMixin, db.Model):
             "id":self.id,
             "username":self.username,
             "email":self.email,
-            #"playlists": make_playlists(self.id)
         }
-
-def make_playlists(id_user):
-        list=[]
-        for i in Playlist.query.filter_by(user_id=id_user):
-            list.append(i.id)
-        return list
 
 class Genre(enum.Enum):
     ROCK="rock"

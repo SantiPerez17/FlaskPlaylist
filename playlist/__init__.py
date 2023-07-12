@@ -20,3 +20,12 @@ from .controllers.SongController import url_song
 app.register_blueprint(url_user, url_prefix="/users")
 app.register_blueprint(url_playlist, url_prefix="/playlists")
 app.register_blueprint(url_song,url_prefix="/songs")
+
+@app.errorhandler(404)
+def error_404(e):
+
+    """
+    Error handler for 404 Not Found errors.
+    """
+    
+    return jsonify(error=str(e), message='URL Inválida.')

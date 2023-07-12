@@ -9,6 +9,39 @@ url_playlist = Blueprint('playlists', __name__)
 @url_playlist.route('/', methods=['POST'])
 @token_required
 def add_playlist(current_user):
+
+    """
+    Endpoint for creating a new playlist.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "message": "Playlist created successfully.",
+            "playlist": <serialized_playlist>
+        }
+    - Error:
+        - If the request data is invalid or missing:
+            {
+                "message": "Invalid Data."
+            }
+        - If the name is missing:
+            {
+                "message": "Name is required."
+            }
+        - If the playlist already exists for the user:
+            {
+                "message": "Playlist already exists."
+            }
+        - If one or more songs in the song_ids list do not exist:
+            {
+                "message": "One or more songs do not exist."
+            }
+        - If an error occurs while creating the playlist:
+            {
+                "message": "Could not create playlist.",
+                "error": "<error_message>"
+            }
+    """
+    
     json_data = request.get_json()
 
     if not json_data:
@@ -44,35 +77,112 @@ def add_playlist(current_user):
 
 @url_playlist.route("/", methods=["GET"])
 def get_playlists():
-    playlists = Playlist.query.all()
-    serialized_playlists = []
+    """
+    Endpoint for retrieving all playlists.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "playlists": [
+                {
+                    "id": <playlist_id>,
+                    "name": <playlist_name>,
+                    "user_id": <user_id>,
+                    "songs": <serialized_songs>
+                },
+                ...
+            ]
+        }
+    - Error:
+        - If an error occurs while retrieving the playlists:
+            {
+                "message": "Could not retrieve playlists.",
+                "error": "<error_message>"
+            }
+    """
+    try:
+        playlists = Playlist.query.all()
+        serialized_playlists = []
 
-    for playlist in playlists:
-        serialized_playlist = playlist.serialize()
-        serialized_playlist["songs"] = PlaylistService.serialize_songs(playlist)
-        serialized_playlists.append(serialized_playlist)
+        for playlist in playlists:
+            serialized_playlist = playlist.serialize()
+            serialized_playlist["songs"] = PlaylistService.serialize_songs(playlist)
+            serialized_playlists.append(serialized_playlist)
 
-    return jsonify({'playlists': serialized_playlists}), 200
+        return jsonify({'playlists': serialized_playlists}), 200
+
+    except Exception as e:
+        return jsonify({'message': 'Could not retrieve playlists.', 'error': str(e)}), 500
+
 
 
 @url_playlist.route("/myPlaylists", methods=["GET"])
 @token_required
 def get_my_playlists(current_user):
+    """
+    Endpoint for retrieving playlists belonging to the current user.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "playlists": [
+                {
+                    "id": <playlist_id>,
+                    "name": <playlist_name>,
+                    "user_id": <user_id>, #not neccesary
+                    "songs": <serialized_songs>
+                },
+                ...
+            ]
+        }
+    - Error:
+        - If an error occurs while retrieving the playlists:
+            {
+                "message": "Could not retrieve playlists.",
+                "error": "<error_message>"
+            }
+    """
+
     user_id = UserService.getIDByEmail(current_user.email)
-    playlists = Playlist.query.filter_by(user_id=user_id).all()
-    serialized_playlists = []
 
-    for playlist in playlists:
-        serialized_playlist = playlist.serialize()
-        serialized_playlist["songs"] = PlaylistService.serialize_songs(playlist)
-        serialized_playlists.append(serialized_playlist)
+    try:
+        playlists = Playlist.query.filter_by(user_id=user_id).all()
+        serialized_playlists = []
 
-    return jsonify({'playlists': serialized_playlists}), 200
+        for playlist in playlists:
+            serialized_playlist = playlist.serialize()
+            serialized_playlist["songs"] = PlaylistService.serialize_songs(playlist)
+            serialized_playlists.append(serialized_playlist)
+
+        return jsonify({'playlists': serialized_playlists}), 200
+
+    except Exception as e:
+        return jsonify({'message': 'Could not retrieve playlists.', 'error': str(e)}), 500
+
 
 
 @url_playlist.route("/<id>", methods=["GET"])
 @token_required
 def get_playlist(current_user, id):
+
+    """
+    Endpoint for retrieving a playlist.
+    Requires the following parameters in the URL:
+    - id: ID of the playlist.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "playlist": {
+                "id": <playlist_id>,
+                "name": <playlist_name>,
+                "user_id": <user_id>,
+                "songs": <serialized_songs>
+            }
+        }
+    - Error:
+        {
+            "message": "<error_message>"
+        }
+    """
+
     playlist = Playlist.query.filter_by(id=id).first()
 
     if not playlist:
@@ -89,6 +199,22 @@ def get_playlist(current_user, id):
 @url_playlist.route("/<id>", methods=["DELETE"])
 @token_required
 def delete_playlist(current_user, id):
+
+    """
+    Endpoint for deleting a playlist.
+    Requires the following parameters in the URL:
+    - id: ID of the playlist.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "message": "Playlist deleted successfully."
+        }
+    - Error:
+        {
+            "message": "<error_message>"
+        }
+    """
+
     playlist = Playlist.query.filter_by(id=id).first()
 
     if not playlist:
@@ -108,6 +234,24 @@ def delete_playlist(current_user, id):
 @url_playlist.route("/<id>", methods=["PUT"])
 @token_required
 def update_playlist(current_user, id):
+
+    """
+    Endpoint for updating a playlist.
+    Requires the following parameters in the URL:
+    - id: ID of the playlist.
+    Requires the following JSON data in the request body:
+    - name: New name for the playlist.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "message": "Playlist updated successfully."
+        }
+    - Error:
+        {
+            "message": "<error_message>"
+        }
+    """
+
     user_id = UserService.getIDByEmail(current_user.email)
     playlist = Playlist.query.filter_by(id=id).first()
 
@@ -139,6 +283,24 @@ def update_playlist(current_user, id):
 @url_playlist.route("/<id>/songs", methods=["POST"])
 @token_required
 def add_songs_to_playlist(current_user, id):
+
+    """
+    Endpoint for adding songs to a playlist.
+    Requires the following parameters in the URL:
+    - id: ID of the playlist.
+    Requires the following JSON data in the request body:
+    - song_ids: List of song IDs to be added.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "message": "Songs added to playlist successfully."
+        }
+    - Error:
+        {
+            "message": "<error_message>"
+        }
+    """
+
     user_id = UserService.getIDByEmail(current_user.email)
     playlist = Playlist.query.filter_by(id=id).first()
     if not playlist:
@@ -173,6 +335,23 @@ def add_songs_to_playlist(current_user, id):
 @url_playlist.route('/<playlist_id>/songs/<song_id>', methods=['DELETE'])
 @token_required
 def delete_song_from_playlist(current_user, playlist_id, song_id):
+    
+    """
+    Endpoint for deleting a song from a playlist.
+    Requires the following parameters in the URL:
+    - playlist_id: ID of the playlist.
+    - song_id: ID of the song to be deleted.
+    Returns a response with the following structure:
+    - Success:
+        {
+            "message": "Song removed from the playlist successfully."
+        }
+    - Error:
+        {
+            "message": "<error_message>"
+        }
+    """
+
     playlist = Playlist.query.filter_by(id=playlist_id).first()
     if not playlist:
         return jsonify({'message': 'Playlist not found.'}), 404

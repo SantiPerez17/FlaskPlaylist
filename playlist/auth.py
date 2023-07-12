@@ -4,6 +4,11 @@ from flask import request, abort, current_app
 from playlist.models import User
 
 def token_required(f):
+
+    """
+    Decorator function to enforce token authentication for a given endpoint.
+    """
+    
     @wraps(f)
     def decorated(*args, **kwargs):
         # Get the token from the Authorization header
@@ -31,3 +36,4 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
 
     return decorated
+
