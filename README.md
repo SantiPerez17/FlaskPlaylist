@@ -1,12 +1,12 @@
 # Playlist
 
-Playlist es una aplicación web desarrollada en Flask que te permite crear y gestionar tus propias listas de reproducción de música. Con Playlist, puedes agregar canciones, organizarlas en listas personalizadas y disfrutar de tu música favorita en cualquier momento.
+Playlist es una API desarrollada en Flask que te permite crear y gestionar listas de reproducción de música. Se pueden agregar canciones, organizarlas en listas personalizadas.
 
 ## Características principales
 
 - Registro de usuarios: Crea una cuenta y accede a todas las funciones de Playlist.
 - Autenticación segura: Protege tus datos con un sistema de autenticación basado en tokens JWT.
-- Creación de listas de reproducción: Crea listas personalizadas con tus canciones favoritas.
+- Creación de listas de reproducción: Crea listas personalizadas con canciones.
 - Administración de canciones: Agrega y elimina canciones de tus listas de reproducción.
 - Exploración de canciones: Descubre nuevas canciones y géneros populares.
 - Edición de perfil: Actualiza tu información de usuario, incluyendo nombre de usuario y contraseña.
