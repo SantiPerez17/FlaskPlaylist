@@ -65,10 +65,6 @@ http://localhost:5000
 
 ## Endpoints
 
-Aquí se describen los endpoints disponibles en el proyecto:
-
-Por supuesto, aquí tienes la documentación para los endpoints proporcionados:
-
 ## Endpoints de Users
 
 ### Agregar un nuevo usuario
