@@ -4,19 +4,18 @@ Playlist es una API desarrollada en Flask que te permite crear y gestionar lista
 
 ## Características principales
 
-- Registro de usuarios: Crea una cuenta y accede a todas las funciones de Playlist.
+- Registro de usuarios: Crear una cuenta y accede a todas las funciones de Playlist.
 - Autenticación segura: Protege tus datos con un sistema de autenticación basado en tokens JWT.
-- Creación de listas de reproducción: Crea listas personalizadas con canciones.
-- Administración de canciones: Agrega y elimina canciones de tus listas de reproducción.
-- Exploración de canciones: Descubre nuevas canciones y géneros populares.
-- Edición de perfil: Actualiza tu información de usuario, incluyendo nombre de usuario y contraseña.
+- Creación de listas de reproducción: Crear listas personalizadas con canciones.
+- Administración de canciones: Agregar y eliminar canciones de tus listas de reproducción.
+- Edición de perfil: Actualizar tu información de usuario, incluyendo nombre de usuario y contraseña.
 
 ## Instalación
 
-1. Clona el repositorio de Playlist.
-2. Crea y activa un entorno virtual.
-3. Instala las dependencias del proyecto: `pip install -r requirements.txt`.
-4. Ejecuta la aplicación: `python run.py`.
+1. Clonar el repositorio de Playlist.
+2. Crear y activar un entorno virtual.
+3. Instalar las dependencias del proyecto: `pip install -r requirements.txt`.
+4. Ejecutar la aplicación: `python run.py`.
 
 ## Tabla de contenidos
 
@@ -33,29 +32,29 @@ Playlist es una API desarrollada en Flask que te permite crear y gestionar lista
 
 ## Instalación
 
-1. Clona el repositorio:
+1. Clonar el repositorio:
 
 ```bash
 git clone https://github.com/SantiPerez17/FlaskPlaylist.git
 ```
 
-2. Instala las dependencias:
+2. Instalar las dependencias:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Configura las variables de entorno (si es necesario).
+3. Configurar las variables de entorno (si es necesario).
 
 ## Uso
 
-1. Inicia la aplicación:
+1. Iniciar la aplicación:
 
 ```bash
 python run.py
 ```
 
-2. Accede a la aplicación en tu navegador:
+2. Acceder a la aplicación en tu navegador:
 
 ```
 http://localhost:5000
